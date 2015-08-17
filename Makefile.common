@@ -1,0 +1,37 @@
+FLAGS = 
+LINK = -lrt -lm -lgsl -lgslcblas
+CC = gcc
+INC = -I ../include -I/usr/local/include
+
+dbg=1
+compr=0
+appro=1
+simp=0
+exp=0
+mems=1
+
+ifeq (${dbg}, 1)
+FLAGS += -DUSE_DBG -g
+else
+FLAGS += -O3
+endif
+
+ifeq (${simp}, 1)
+FLAGS += -DSIMP_NJ
+endif
+
+ifeq (${appro}, 1)
+FLAGS += -DUSE_APPR
+endif
+
+ifeq (${compr}, 1)
+FLAGS += -DUSE_COMPRESS
+endif
+
+ifeq (${exp}, 1)
+FLAGS += -DUSE_EXPERIMENT
+endif
+
+ifeq (${mems}, 1)
+FLAGS += -DMEM_SAVE
+endif

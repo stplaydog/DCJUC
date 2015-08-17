@@ -1,0 +1,17 @@
+version 1.0 contributor: 
+Zhaoming Yin zyin9@gatech.edu
+Xing Liu xing.liu@gatech.edu
+David A. Bader bader@cc.gatech.edu
+Zhihui Du duzh@tsinghua.edu.cn
+
+##
+before compile, gsl must be installed
+##
+how to compile:
+make
+##
+how to run:
+cd main and run
+##
+how to check out svn
+svn co svn+ssh://leonxin@hpc11.cc.gt.atl.ga.us/home/users/leonxin/svnleon/DCJUC
