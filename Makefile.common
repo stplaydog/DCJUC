@@ -1,5 +1,5 @@
 FLAGS = 
-LINK = -lrt -lm -lgsl -lgslcblas
+LINK = -lm -lgsl -lgslcblas
 CC = gcc
 INC = -I ../include -I/usr/local/include
 
