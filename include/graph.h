@@ -36,6 +36,7 @@ struct gr
 	int *zero;
 	int cycle;
 	int distance[3];
+        int score;
 };
 typedef struct gr tg;
 typedef struct gr *pg;

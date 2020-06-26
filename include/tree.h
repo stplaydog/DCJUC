@@ -37,6 +37,8 @@ struct tree{
 	int lower_bound;
 	tte *edges;
 	po orders;
+        int num_genome;
+        int edge_num;
 };
 typedef struct tree tt;
 typedef struct tree *pt;

@@ -87,7 +87,7 @@ run_upper_bound(po o){
 		num_remain++;
 	}
 	if(num_remain==0)
-		return;
+		return -1;
 	oo->num_genome = o->num_genome;
 	oo->num_med_genome = o->num_med_genome;
 	oo->num_input_genome = o->num_input_genome;

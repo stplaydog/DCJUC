@@ -1,6 +1,7 @@
 #include "model.h"
 #include "tree.h"
 #include "newick.h"
+#include "sim.h"
 
 void
 graph_to_orders(pg g, pt tree);
@@ -66,7 +67,7 @@ run_initialization(char *file, char *nwfile){
 					root = n_tree->edges[i][j];
 			init_graph_by_two_orders(tree->orders, g, 
 					to[0], to[1]);
-			init_directive_node(g, tree, root);
+			init_directive_node(g, n_tree, tree, root);
 			graph_to_orders(g, tree);
 		}
 		//three neighbors are initiated
@@ -108,7 +109,6 @@ run_refinement(pt tree){
 	}
 	while(improved == TRUE){
 		for(i=o->num_input_genome; i<o->num_genome; i++){
-			int old_score = 
 			pg g = (pg)malloc(sizeof(tg));
 			init_graph_by_three_orders(tree->orders, g, 
 					n_tree->edges[i][0], n_tree->edges[i][1], 
@@ -251,7 +251,7 @@ init_directive_node(pg g, pt tree,
 		//pop queue
 		int current = queue[--q_idx];
 		if(nw->v_type[current] == V_TYPE_INIT)
-			init_adj_directive_node(o, a, current);
+			init_adj_directive_node(o, adj, current);
 		else{ // add into queue
 			for(i=0; i<3; i++)
 				queue[q_idx++] = nw->edges[current][i];
@@ -262,7 +262,7 @@ init_directive_node(pg g, pt tree,
 }
 
 void 
-adj_to_graph_csr(pg g, pa adj, int pos){
+adj_to_graph_csr(pg g, pa a, int pos){
 	int i, j, k;
 	//compute v_idx first
 	int sum = 0;
@@ -295,13 +295,13 @@ void
 init_adj_directive_node(po o, pa a, int o_pos){
 	int i, j, k;
 	for(i=0; i<o->v_size; i++){
-		int start = i==0?0:o->v_idx[pos][i-1];
-		int end = o->v_idx[pos][i];
+		int start = i==0?0:o->v_idx[o_pos][i-1];
+		int end = o->v_idx[o_pos][i];
 		for(j=start; j<end; j++){
-			int to = o->e_idx[pos][j];
+			int to = o->e_idx[o_pos][j];
 			int from = i;
-			if(search(a->list[from], idx_list[from], to) == FALSE)
-				a->list[from][idx_list[from]++] = to;
+			//if(search(a->list[from], a->list[from], to) == FALSE)
+			//	a->list[from][a->list[from]++] = to;
 		}
 	}
 }

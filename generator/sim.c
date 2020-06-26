@@ -537,9 +537,10 @@ vis_fork_adj(pa a, int pos_n){
 
 void
 init_adj(pa a, int size1, int size2){
+        int i;
 	a->list = (int**)malloc(sizeof(int*)*size1);
 	for(i=0; i<size1; i++)
 		a->list[i] = (int*)malloc(sizeof(int)*size2);
-	a->idx_list = (int*)malloc(sizeof(int)*siz1);
+	a->idx_list = (int*)malloc(sizeof(int)*size1);
 	a->list_size = size1;
 }
