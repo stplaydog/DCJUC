@@ -23,8 +23,12 @@ cd main
 
 **MAC OS**
 
+Compilers and configuration tools (you might need to edit configure.ac):
+
 ```
-brew install libtool
+brew install gcc@9
+brew install autoconf automake libtool
+ln -s /usr/local/bin/glibtoolize /usr/local/bin/libtoolize
 ```
 
 **Ubuntu Linux**
