@@ -1,0 +1,50 @@
+1) make sure the code is correct (done)
+2) make sure the parallel code is working efficiently
+   2-1) make it compile (done)
+   2-2) solve the same bucket problem (done)
+   2-3) write code to make program be able to terminate (done)
+3) implement the thread version of list (done)
+   3-1) finish ramp up to distribute initial stack to different threads (done)
+   3-2) make sure the program terminates (done)
+4) set up svn for optec (done)
+5) write code for dcj duplication distance (done)
+   1) finish listdcj (done)
+   2) finish insdcj (done)
+       2-1) finish read graph (done)
+       2-2) finish branch (to write a DFS for listing all possible combinations) (done)
+       2-3) encode (done)
+       2-4) compute bound (done)
+       2-5) proof that bound works (done)
+       2-6) compile the code (done)
+       2-7) pass code test (done)
+            2-7-1) check correctness of constructor (done)
+            2-7-2) check compute_bound (done)
+            2-7-3) test bound with complicated data (0:2, 1:2, 2:2, 3:2, 2:3, 2:4)(done)
+			0:2 (done)
+			1:2 (done)
+			2:2 (done)
+			3:2 (done)
+			2:3 (done)
+			2:4 (done)
+            2-7-4) check get_num_branches (done)
+       2-8) check the BnB process (done)
+6) run dcj-exact-indel distance experiments  (done)
+7) plug distance method into lk median solver
+	1) write the initialization method (done)
+	2) rewrite the branch method
+	3) to_branch and from_branch should be rewritten
+	4) write the LK strategy in list.cpp
+	4) compile 
+	5) test the initialization method
+	6) test the branch method
+8) write the BnB code for exact median solver (leave to the future)
+9) run parallel experiemnt 
+	9-1) strong scaling
+		9-1-1) prepare data for knapsack
+		9-1-2) prepare data for dcj-indel-ca
+		9-1-3) knapsack problem
+			* strong speedup (done)
+			* strong bandwidth (done)
+			* strong efficiency (done)
+			* strong composistion (decided not to do)
+		9-1-4) dcj-indel-cd problem (undone) 

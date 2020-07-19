@@ -1,0 +1,312 @@
+1) make sure the code is correct (done)
+2) make sure the parallel code is working efficiently
+   2-1) make it compile (done)
+   2-2) solve the same bucket problem (done)
+   2-3) write code to make program be able to terminate (done)
+3) implement the thread version of list (done)
+   3-1) finish ramp up to distribute initial stack to different threads (done)
+   3-2) make sure the program terminates (done)
+4) set up svn for optec (done)
+5) write code for dcj duplication distance (done)
+   1) finish listdcj (done)
+   2) finish insdcj (done)
+       2-1) finish read graph (done)
+       2-2) finish branch (to write a DFS for listing all possible combinations) (done)
+       2-3) encode (done)
+       2-4) compute bound (done)
+       2-5) proof that bound works (done)
+       2-6) compile the code (done)
+       2-7) pass code test (done)
+            2-7-1) check correctness of constructor (done)
+            2-7-2) check compute_bound (done)
+            2-7-3) test bound with complicated data (0:2, 1:2, 2:2, 3:2, 2:3, 2:4)(done)
+			0:2 (done)
+			1:2 (done)
+			2:2 (done)
+			3:2 (done)
+			2:3 (done)
+			2:4 (done)
+            2-7-4) check get_num_branches (done)
+       2-8) check the BnB process (done)
+6) run dcj-exact-indel distance experiments  (done)
+7) plug distance method into lk median solver
+	1) write the initialization method (done)
+	2) rewrite the branch method
+	3) to_branch and from_branch should be rewritten
+	4) write the LK strategy in list.cpp
+	4) compile 
+	5) test the initialization method
+	6) test the branch method
+8) write the BnB code for exact median solver (leave to the future)
+9) run parallel experiemnt 
+	9-1) strong scaling
+		9-1-1) prepare data for knapsack
+		9-1-2) prepare data for dcj-indel-ca
+		9-1-3) knapsack problem
+			* strong speedup (done)
+			* strong bandwidth (done)
+			* strong efficiency (done)
+			* strong composistion (decided not to do)
+		9-1-4) dcj-indel-cd problem (undone) 
+			* strong speedup  (undone)
+			* strong bandwidth (undone)
+			* strong efficiency (undone)
+			* strong composistion (undone)
+10) implement dcj-indel-cd median algorithm ()
+	10-1) implement insmed (done)
+	10-2) implement lk_opt algorithm (done)
+		10-2-1) lk body implementation (done) 
+		10-2-2) expand children implementation (should be parallelizable) (done)
+		10-2-3) reset list (done)
+	10-3) implement listmed (done)
+	10-4) compile the code (done)
+	10-5) debug the code to make it run
+		10-4-1) write the initialization function for median genome (done)
+		10-4-2) visual check (done)
+		10-4-2) add some thing to compute_index and reorder (done)
+		10-4-3) make sure the constructor works (done)
+		10-4-4) make sure the medlist works (done)
+		10-4-4) make sure the lk works (done)
+		10-4-5) compute distance 0
+11) conducting experiment for DCJ-Indel-CD median algorithm	
+	11-1) performance tunning (neighbor score not decreasing) (done)
+12) conducting real data DCJ-Indel-CD distance algorithm
+	12-1) prepare for the real data (done)
+	13-2) try to shrink the data
+	13-3) run the experiment
+	13-4) fix the bug in the distance computation when both of the genome have duplications
+13) change the initialization method for the median comutation method
+14) check how many components there are (done)
+
+###############--05-6-2014--###########
+15) finish the dis_master
+	15-1) finish removing regular comonents, and write each irregular component into different files, using python (done)
+	15-2) optimal assignment, using python (done)
+	15-3) condense the graph, using python (done)
+###############--05-8-2014--###########
+16) finish testing the dis_master
+	16-1) finish testing regular components (done)
+	16-2) finish testing optimal assignment (done)
+	16-3) finish testing graph condense (done)
+###############--05-9-2014--###########
+17) c++ code can read files now
+	17-1) output num regular CC to a specific file (done)
+	17-2) pre compute distance for irr CC (done)
+###############--05-11-2014--###########
+18) c++ code can read files now
+	18-1) learn some perl and try to understand mingfu's code (done)
+	18-2) do some preprocess to make sure only onthorloguous genes exists (done)
+	18-3) validate the whole process (done)
+###############--05-15-2014--###########
+19) cpp code and debug
+	19-1) finish the cpp code (done)
+	19-2) finish the list code (done)
+	19-3) review the cpp code (done)
+	19-4) finish main function to call these functions (done)
+	19-4) compile the cpp code (done)
+###############--05-16-2014--###########
+20) debug and run the code
+	20-1) let's get some small size synthetic data first (done)
+	20-2) fix bugs in python code (done)
+		20-2-1) vis the graph first (done)
+		20-2-2) debug the irrCC (done)
+		20-2-3) debug the assign (done)
+		20-2-4) debug the CC type (done)
+		20-2-5) need a python code to rename the vertices in the CC graph file, and will print the headers (done) 
+###############--05-18-2014--###########
+21) debug cpp
+	21-1) can read the graph (done)
+	21-2) csr to adj (done)
+###############--05-18-2014--###########
+22) debug cpp
+	22-1) can compute init bound (done)
+		22-3-1) upper bound exem (done)
+		22-3-2) upper bound matc (done)
+		22-3-3) lower bound exem (done)
+		22-3-3) lower bound matc (done)
+	22-2) read and write list at the very beginning()
+		22-2-1) test get_encode exem (done) 
+		22-2-2) test get_encode matc (done) 
+	22-3) can compute branch bound, two rounds (done)
+		22-3-1) get_num_branch exem (done)
+		22-3-2) get_num_branch exem (done)
+		22-3-3) upper bound exem (done) (done)
+		22-3-4) upper bound matc (done) (done)
+		22-3-5) lower bound exem (done) (done)
+		22-3-6) lower bound matc (done) (done)
+	22-4) read and write list when branching()
+		22-4-1) test get_encode exem (done) 
+		22-4-2) test get_encode matc (done) 
+###############--05-23-2014--###########
+23) big data debug
+	23-1) prepare big data test cases using python 
+		23-1-1) size 200 exem (done)
+		23-1-2) size 200 matc ()
+		23-1-3) size 1000 exem ()
+		23-1-4) size 1000 matc ()
+		23-1-5) size 2000 exem ()
+		23-1-6) size 2000 matc ()
+###############--05-24-2014--###########
+1) learn autoconf (done)
+###############--05-30-2014--###########
+1) big data debug (done)
+	1) solve the problem of cycle of two first (done)
+2) learn gdb for mac system (done)
+###############--05-30-2014--###########
+1) change date to time (done)
+###############--06-01-2014--###########
+1) output pipelined only keep name and result (using grep), and test if there is anything else wrong ()
+2) try to debug the problems in exemplar distance ()
+###############--06-08-2014--###########
+1) trying to install automake and autoconf(done)
+###############--06-11-2014--###########
+1) understand the bnb algorithm for maximum clique problem (done)
+2) use template to design and implement a binary search tree, let's test different methods such as balance search tree, black and red search tree etc. (done)
+3) trying to install automake and autoconf(done)
+###############--06-12-2014--###########
+1) compile the code with binary search tree (done)
+2) implement a hash table using template (done)
+###############--06-13-2014--###########
+1) change the code to support the new data structure (done)
+2) separate data structures into different folder, compile them into lib folder into dynamic libraries, them link them using autoconfig (done) 
+###############--06-14-2014--###########
+1) configure dropbox + git (done)
+2) firstly implement the triangle finding algorithm to filter uneccessary vertices (done) 
+###############--06-15-2014--###########
+1) learn iterator in cpp (done)
+2) learn operator in cpp (done)
+3) finish the approximate coloring algorithm (done)
+###############--06-16-2014--###########
+1) have the first commit of GIT (done)
+2) understand the difference between class T and type T (done)
+3) understand why pragma once, why ifndef ifdef (done)
+4) finish public functions for insmc : instance (done)
+5) draw an example of branch and bound algorithm (done)
+6) understand tomita's paper and the algorithm, does it consider clique already? (done)
+	5-1) understand the meaning of Q (done)
+	5-2) understanding the meaning of color list (done)
+	5-3) is the degree changing?, yes it's changing based on the induced subgraph (done)
+###############--06-17-2014--###########
+1) rewrite the function (done)
+2) finish the listmc code (done)
+###############--06-18-2014--###########
+1) transform prof. shi's data info standard graph format (done)
+2) compile the code first (done)
+3) let's get some sythetic graph first (done)
+4) finish debugging, make sure prof. Shi's test cases works (done)
+	4-1) first can read the graph (done)
+###############--06-19-2014--###########
+1) finish debugging with Janes Konc's paper (done)
+	1-1) run the example graph in Janez Konc's paper (done)
+	1-2) can compute the initial bound (done)
+	1-3) can branch and evaluate (done)
+###############--06-20-2014--###########
+1) finish debugging with DIMACS data (done)
+	1-1) prepare graph for DIMACS data (done)
+	1-2) can compute the initial bound (done)
+	1-3) can branch and evaluate (done)
+		1-3-1) finish get_num_branches (done)
+		1-3-2) get the first encode and add into list for the first time (done)
+		1-3-3) finish the first iteration (done)
+		1-3-4) finish all the iteration (done)
+###############--06-21-2014--###########
+1) experiment on prof. Shi's data ()
+	1-1) can enumerate all cliques (done)
+	1-2) get results and send to prof. shi (done)
+	1-3) using connected component method to decompose graph into small parts (done)
+###############--06-22-2014--###########
+1) get CC information (done)
+###############--06-23-2014--###########
+1) count number of triangles (done)
+2) set up git environment in HPC11 (done)
+###############--06-24-2014--###########
+1) set up gredo in git (done)
+2) write program to transform our data set into gredo format (done)
+3) run experiments for simulated data (done)
+	3-1) prepare duplication only data (done)
+	3-2) get the time results for both gredo and optkit (done)
+		3-2-1) get the time results for gredo (done)
+		3-2-2) get the time results for optkit (done)
+			3-2-2-1) segfault list:
+4) run experiments for real data (done)
+	4-1) prepare real data for gredo (done)
+	4-2) prepare real data for optkit, both indel and duplication only (done)
+	4-3) run experiment (done)
+		4-3-1) get the time results for gredo (done)
+		4-3-2) resolve the seqlen problem (done)
+		4-3-2) get the time results for optkit (done)
+5) debug infrastructure which keeps information of the g_count of a specific item in search list (done)
+6) install R, use python to process data and call R to plot the data
+    6-1) install R (done)
+    6-2) use python to process data (done)
+    6-3) use python to call R to plot data (done)
+###############--08-11-2014--###########
+1) generate data with bijection information ()
+    1) for simulated data -- optkit (done)
+        1-1) balanced+dual (done)
+        1-2) unbalanced+dual (done)
+        1-3) balanced+sing (done)
+        1-4) unbalanced+sing (done)
+    2) for real data -- optkit (done)
+        2-1) balanced (done)
+        2-2) unbalanced (done)
+        2-3) verification (done)
+###############--08-28-2014--###########
+1) bijection test
+    1-1) bijection for python code (done)
+         In python code, only cycle of two's mapping is determined (done)
+         However, we need to have a name dict for renamed small graphs (done)
+    1-2) bijection for CPP code (done)
+        1) read the dict first (done)
+        2) keep the mapping from and to list (done)
+        3) update the mapping everytime when branching (done)
+        4) output the mapping at the end (done) 
+    1-3) write the python file, to calculate correctness ()
+        1) for simulated data (done)
+        2) for real data ()
+        3) make sure everything works ()
+            1) Delegate constructor (done)
+            2) change in main.cpp (done)
+            3) organize main.cpp, update help file (done)
+            4) help file example (done)
+            5) change in script (done)
+            6) make it compile (done)
+            7) pass the test ()
+                1) map read correctly (done)
+                2) encode correctly ()
+                3) decode correctly ()
+                4) finalize correctly ()
+2) use docgen in my code ()
+2) use docgen in my code ()
+3) code refactor
+    1) change naming of all member variables ()
+    2) change order of all if statement (done)
+    3) error report in every fopen (done)
+    4) add comment for each function (done)
+    5) all function should only have one return value []
+    6) change all constant to enum []
+    7) change some of functions to static []
+    8) distinguish between member function and inline function []
+    9) shared_ptr transfer ()
+    10) pay attention to cast ()
+    11) change every malloc to new (done)
+    12) namespace []
+    13) exception handling []
+    14) activity logging []
+    15) assertions []
+    16) distinguish between public and private []
+    17) copy right info (done)
+    18) clean up debug functions []
+    19) add bracket for all for loops (done)
+###############--06-25-2014--###########
+1) print the bnb paper for stainer tree problem, and read it ()
+2) finish the function to differentiate the encode for each branch, therefore, save memory ()
+3) finish the extension to list all possible solutions ()
+4) rewrite BinTree using the CPP container standard ()
+5) rewrite HashTable using the CPP container standard ()
+6) test the performance dfference between my implementation and STL implementation ()
+7) give every function a comment ()
+8) read c++ history of different version standards ()
+
+###########todo
+1) 
