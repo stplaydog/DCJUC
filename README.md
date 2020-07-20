@@ -33,5 +33,27 @@ ln -s /usr/local/bin/glibtoolize /usr/local/bin/libtoolize
 
 **Ubuntu Linux**
 
+```
+sudo apt-get install build-essential
+sudo apt-get install autoconf automake gdb git libffi-dev zlib1g-dev libssl-dev
+sudo apt install libtool
+sudo apt-get install gcc-4.8
+```
+
 
 ## 2.2 Run
+
+### 2.2.1 Generate data
+``
+cd shell/insdis
+./batch_gen_dist_graph.sh
+``
+
+TODO this is a bug
+```
+vi data/dist/graph/1000_0.1_0.0_0.1_dual_balanced/0.1_0.0_0.1_0 
+# append 0 to the first line
+
+```
+
+### 2.2.2 Run Distance
