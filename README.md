@@ -53,7 +53,9 @@ TODO this is a bug
 ```
 vi data/dist/graph/1000_0.1_0.0_0.1_dual_balanced/0.1_0.0_0.1_0 
 # append 0 to the first line
-
 ```
 
 ### 2.2.2 Run Distance
+```
+./src/optkit --dis --dis_mode 2 --input_file data/dist/graph/1000_0.1_0.1_0.1_dual_balanced/0.1_0.1_0.1_0 --p_mode 1 --opt_file data/dist/opt_tmp_result/1000_0.1_0.1_0.1_dual_balanced/0.1_0.1_0.1_0 --seq_len 1000
+```
