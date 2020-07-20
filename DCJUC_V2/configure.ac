@@ -1,6 +1,6 @@
 AC_INIT([optkit], 1.0)
 AM_INIT_AUTOMAKE
-AC_PROG_CXX(g++-4.8.1 g++-9)
+AC_PROG_CXX(g++-9 g++)
 CXXFLAGS=
 #debug related
 AC_ARG_ENABLE(debug,

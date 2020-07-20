@@ -103,6 +103,7 @@ def compute_dis_n_output(adj, algo, input_file, out_dir):
 # real execution part
 ####################
 
+
 # create to folder
 input_dir = sys.argv[1]
 out_dir = sys.argv[2]
@@ -112,16 +113,20 @@ vis_folder = sys.argv[5]
 bij_file = sys.argv[6]
 dict_dir = sys.argv[7]
 
+print opt_tmp_file
+
 if os.path.isdir(out_dir) == False:
     os.mkdir(out_dir)
 # list all files in the input folder
 files = [ f for f in listdir(input_dir) if isfile(join(input_dir,f)) ]
+print files
 small_cc_num = 0
 for f in files:
     adj = optimal_assign_n_condense(input_dir, f, out_dir, bij_file)
     small_cc_num += compute_dis_n_output(adj, algo, f, out_dir)
 
 files = [ f for f in listdir(out_dir) if isfile(join(out_dir,f)) ]
+print files
 for f in files:
     adj = read_graph(out_dir+"/"+f)
     # when rename, there should be a map file stored

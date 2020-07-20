@@ -8,98 +8,85 @@ bool control;
 
 #define FILTER 4
 
-List::List(myint b_size, myint list_size, 
-		myint b, myint num_t, 
-		bool is_u) : List(b_size, list_size, b, num_t, is_u, false) {
-}
-
-
-List::List(myint b_size, myint list_size, 
-		myint b, myint num_t, 
-		bool is_u, bool is_enumerate_a)
+/**
+ * The constructor for list.
+ *
+ * @param[in]       b_size          bucket size
+ * @param[in]       list_size       size of each bucket
+ * @param[in]       b               base index
+ * @param[in]       num_t           number of threads
+ * @param[in]       is_u            compute based on upper bound
+ * @param[in]       is_enumerate_a  unumerate all possible solutions
+ * @param[in]       log             place to keep the log file
+ *
+**/
+List::List(int32_t b_size, int32_t list_size, int32_t b, int32_t num_t, bool is_u, bool *is_enumerate_a, const char* log)
 {
-	int i, j;
-	num_threads = num_t;
-    buck_size = b_size; 
-    base = b;
-    content_size = (lint*)malloc(sizeof(lint)*b_size);
-    num = (lint*)malloc(sizeof(lint)*b_size);
-    count = (int**)malloc(sizeof(int*)*num_threads);
-    is_ub = is_u;
-    is_enumerate_all = is_enumerate_a;
+    count            = new int*[num_threads];
+	eliminate        = new bool*[num_threads];
+	end              = new int*[num_threads];
+    idx_sum          = new int*[num_threads];
+	nei_score        = new int*[num_t];
+	start            = new int*[num_threads];
+
+    content_size     = new int64_t[b_size];
+	elim_idx         = new int[num_t*CACHE_FILL];
+    num              = new int64_t[b_size];
+
+    base             = b;
+    buck_size        = b_size; 
+    is_ub            = is_u;
+    is_enumerate_all = *is_enumerate_a;
+	max_val          = 0;
+	min_val          = 100000000;
+	num_threads      = num_t;
+	read_num         = 0;
+	read_cnt         = 0;
+	search_space     = 0;
+	write_num        = 0;
+	write_cnt        = 0;
+
     for(int i =0; i<num_threads; i++)
     {
-        count[i] = (int*)malloc(sizeof(int)*b_size);
+        count[i]     = new int[b_size];
+		eliminate[i] = new bool[LIST_SIZE*10]; 
+		end[i]       = new int[b_size];
+		idx_sum[i]   = new int[b_size+2];
+		nei_score[i] = new int[LIST_SIZE*10]; 
+		start[i]     = new int[b_size];
     }
-    idx_sum = (int**)malloc(sizeof(int*)*num_threads);
-	for(int i =0; i<num_threads; i++)
-    {
-		idx_sum[i] = (int*)malloc(sizeof(int)*(b_size+2));
-    }
-	end = (int**)malloc(sizeof(int*)*num_threads);
-	for(int i =0; i<num_threads; i++)
-    {
-		end[i] = (int*)malloc(sizeof(int)*b_size);
-    }
-	start = (int**)malloc(sizeof(int*)*num_threads);
-	for(int i=0; i<num_threads; i++)
-    {
-		start[i] = (int*)malloc(sizeof(int)*b_size);
-    }
-	eliminate = (bool**)malloc(sizeof(bool*)*num_t);
-	nei_score = (int**)malloc(sizeof(int*)*num_t);
-	elim_idx = (int*)malloc(sizeof(int)*num_t*CACHE_FILL);
-	for(int i=0; i<num_t; i++)
-    {
-		eliminate[i] = (bool*)malloc(sizeof(bool)*LIST_SIZE*10); //for the record of which tobe eliminated which not
-		nei_score[i] = (int*)malloc(sizeof(int)*LIST_SIZE*10); //for the record of which tobe eliminated which not
-	}
-	//init values
-	for(i=0; i<b_size; i++)
+	/* init values */
+	for(int i=0; i<b_size; i++)
     {
 		content_size[i] = list_size;
-		num[i] = 0;
-		for(j=0; j<num_t; j++)
+		num[i]          = 0;
+		for(int j=0; j<num_t; j++)
         {
-			count[j][i] = 0;
+			count[j][i]   = 0;
 			idx_sum[j][i] = 0;
-			end[j][i] = 0;
-			start[j][i] = 0;
+			end[j][i]     = 0;
+			start[j][i]   = 0;
 		}
 	}
-	max_val = 0;
-	min_val = 100000000;
+
 	for(int i=0; i<10; i++)
     {
 		time_elem e;
 		t.list.push_back(e);
 		t.init_timer(i);
 	}
-	search_space = 0;
-	read_num =0;
-	write_num=0;
-	read_cnt =0;
-	write_cnt =0;
-#ifdef USE_DEBUG
-    //g_count_list = (int**)malloc(sizeof(int*)*b_size);
-    //g_count_idx = (int*)malloc(sizeof(int)*b_size);
-    //for(int i=0; i<b_size; i++)
-    //{
-    //    g_count_list[i] = (int*)malloc(sizeof(int)*LIST_SIZE);
-    //}
-#endif
 }
 
 List::~List(){
 }
 
 bool
-List::compute_partition(myint buck_id, Instance** ins){
+List::compute_partition(int32_t buck_id, Instance** ins){
 //#ifdef USE_BW
 	omp_lock_t writelock;
         omp_init_lock(&writelock);
 //#endif
-	myint i, j;
+	int32_t i, j;
 	//init counts
 	for (i=0; i<num_threads; i++){
 		elim_idx[i*CACHE_FILL] = 0;
@@ -112,7 +99,7 @@ List::compute_partition(myint buck_id, Instance** ins){
 	bool is_lk_terminate=false;
 #pragma omp parallel for num_threads(num_threads) private(i,j) 
 	for (i=0; i<num[buck_id]; i++){
-		myint tid = omp_get_thread_num();
+		int32_t tid = omp_get_thread_num();
 		Instance *instance = ins[tid];
 		int encode[30000];
 		int number;
@@ -237,7 +224,7 @@ List::compute_partition(myint buck_id, Instance** ins){
 }
 
 void
-List::reorder_list(myint buck_id, Instance** ins){
+List::reorder_list(int32_t buck_id, Instance** ins){
 	int i, j;
 	omp_lock_t writelock;
 	omp_init_lock(&writelock);
@@ -246,7 +233,7 @@ List::reorder_list(myint buck_id, Instance** ins){
 	//printf("num %d\n", num[buck_id]);
 #pragma omp parallel for num_threads(num_threads) private(i,j) 
 	for (i=0; i<num[buck_id]; i++){
-		myint tid = omp_get_thread_num();
+		int32_t tid = omp_get_thread_num();
 		Instance *instance = ins[tid];
 		int encode[30000];
 		int number;
@@ -924,12 +911,12 @@ free_list(){
 }
 
 void 
-List::add(lint pos, myint buck_id, 
+List::add(int64_t pos, int32_t buck_id, 
         int num_code, int *encode, int ins_id){
 }
 
 void 
-List::get(lint pos, myint buck_id, 
+List::get(int64_t pos, int32_t buck_id, 
         int *encode, int *number, int ins_id){
 }
 

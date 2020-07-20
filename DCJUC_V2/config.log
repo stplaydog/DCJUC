@@ -30,16 +30,12 @@ Kernel configured for up to 8 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 2 4 6
 Primary memory available: 16.00 gigabytes
-Default processor set: 530 tasks, 2902 threads, 4 processors
-Load average: 2.80, Mach factor: 2.19
+Default processor set: 546 tasks, 2882 threads, 4 processors
+Load average: 2.50, Mach factor: 2.64
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
 
-PATH: /usr/local/opt/node@8/bin
-PATH: /usr/local/opt/llvm/bin
-PATH: /usr/local/opt/node@8/bin
-PATH: /usr/local/opt/node@8/bin
 PATH: /Users/zhaomingyin/.nvm/versions/node/v11.15.0/bin
 PATH: /usr/local/opt/node@8/bin
 PATH: /usr/local/git/current/bin
@@ -51,15 +47,6 @@ PATH: /usr/sbin
 PATH: /sbin
 PATH: /Applications/VMware Fusion.app/Contents/Public
 PATH: /opt/X11/bin
-PATH: /Users/zhaomingyin/.go/bin
-PATH: /usr/local/opt/go/libexec/bin
-PATH: /Users/zhaomingyin/gitlocal/hyperledger/fabric-samples
-PATH: /Users/zhaomingyin/.go/bin
-PATH: /usr/local/opt/go/libexec/bin
-PATH: /Users/zhaomingyin/gitlocal/hyperledger/fabric-samples
-PATH: /Users/zhaomingyin/.go/bin
-PATH: /usr/local/opt/go/libexec/bin
-PATH: /Users/zhaomingyin/gitlocal/hyperledger/fabric-samples
 PATH: /Users/zhaomingyin/.go/bin
 PATH: /usr/local/opt/go/libexec/bin
 PATH: /Users/zhaomingyin/gitlocal/hyperledger/fabric-samples
@@ -89,8 +76,6 @@ configure:2671: checking whether make sets $(MAKE)
 configure:2693: result: yes
 configure:2722: checking whether make supports nested variables
 configure:2739: result: yes
-configure:2923: checking for g++-4.8.1
-configure:2953: result: no
 configure:2923: checking for g++-9
 configure:2939: found /usr/local/bin/g++-9
 configure:2950: result: g++-9
@@ -289,7 +274,7 @@ configure:7115: checking if : is a manifest tool
 configure:7121: : '-?'
 configure:7129: result: no
 configure:7185: checking for dsymutil
-configure:7201: found /usr/local/opt/llvm/bin/dsymutil
+configure:7201: found /usr/bin/dsymutil
 configure:7212: result: dsymutil
 configure:7277: checking for nmedit
 configure:7293: found /usr/bin/nmedit
@@ -560,7 +545,6 @@ config.status:1318: cd lib       && sed -e '/# am--include-marker/d' Makefile   
 make: Nothing to be done for `am--depfiles'.
 config.status:1323: $? = 0
 config.status:1318: cd src       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
-make: Nothing to be done for `am--depfiles'.
 config.status:1323: $? = 0
 config.status:1241: executing libtool commands
 

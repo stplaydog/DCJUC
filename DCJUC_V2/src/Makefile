@@ -102,12 +102,10 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_optkit_OBJECTS = insdis.$(OBJEXT) insmed.$(OBJEXT) \
-	listdcj.$(OBJEXT) listmed.$(OBJEXT) plist.$(OBJEXT) \
-	timer.$(OBJEXT) insdcj.$(OBJEXT) list.$(OBJEXT) \
-	listknap.$(OBJEXT) insknap.$(OBJEXT) instance.$(OBJEXT) \
-	listdis.$(OBJEXT) main.$(OBJEXT) utils.$(OBJEXT) \
-	insmc.$(OBJEXT) listmc.$(OBJEXT)
+am_optkit_OBJECTS = insdis.$(OBJEXT) insmed.$(OBJEXT) plist.$(OBJEXT) \
+	timer.$(OBJEXT) list.$(OBJEXT) insknap.$(OBJEXT) \
+	instance.$(OBJEXT) main.$(OBJEXT) utils.$(OBJEXT) \
+	insmc.$(OBJEXT) listint.$(OBJEXT)
 optkit_OBJECTS = $(am_optkit_OBJECTS)
 optkit_DEPENDENCIES = ../lib/libds.la
 AM_V_lt = $(am__v_lt_$(V))
@@ -129,14 +127,11 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/insdcj.Po ./$(DEPDIR)/insdis.Po \
-	./$(DEPDIR)/insknap.Po ./$(DEPDIR)/insmc.Po \
-	./$(DEPDIR)/insmed.Po ./$(DEPDIR)/instance.Po \
-	./$(DEPDIR)/list.Po ./$(DEPDIR)/listdcj.Po \
-	./$(DEPDIR)/listdis.Po ./$(DEPDIR)/listknap.Po \
-	./$(DEPDIR)/listmc.Po ./$(DEPDIR)/listmed.Po \
-	./$(DEPDIR)/main.Po ./$(DEPDIR)/plist.Po ./$(DEPDIR)/timer.Po \
-	./$(DEPDIR)/utils.Po
+am__depfiles_remade = ./$(DEPDIR)/insdis.Po ./$(DEPDIR)/insknap.Po \
+	./$(DEPDIR)/insmc.Po ./$(DEPDIR)/insmed.Po \
+	./$(DEPDIR)/instance.Po ./$(DEPDIR)/list.Po \
+	./$(DEPDIR)/listint.Po ./$(DEPDIR)/main.Po \
+	./$(DEPDIR)/plist.Po ./$(DEPDIR)/timer.Po ./$(DEPDIR)/utils.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -323,12 +318,12 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-noinst_HEADERS = insdcj.h insknap.h insmed.h list.h listdis.h listmed.h timer.h insdis.h instance.h listdcj.h listknap.h plist.h utils.h insmc.h listmc.h 
-optkit_SOURCES = insdis.cpp insmed.cpp listdcj.cpp listmed.cpp plist.cpp timer.cpp insdcj.cpp insdis.h list.cpp listknap.cpp insknap.cpp instance.cpp listdis.cpp main.cpp utils.cpp insmc.cpp listmc.cpp 
+noinst_HEADERS = insknap.h insmed.h list.h timer.h insdis.h instance.h plist.h utils.h insmc.h listint.h 
+optkit_SOURCES = insdis.cpp insmed.cpp plist.cpp timer.cpp insdis.h list.cpp insknap.cpp instance.cpp main.cpp utils.cpp insmc.cpp listint.cpp 
 optkit_LDADD = $(OPENMP_LIBi) ../lib/libds.la
-AM_CXXFLAGS = -g3 -Wall -fopenmp -static -I$(top_srcdir)/lib -std=c++11 -DUSE_DEBUG
+AM_CXXFLAGS = -g -fopenmp -I$(top_srcdir)/lib -std=c++11 -DUSE_DEBUG -gdwarf-2
 #optkit_LIBADD = ../lib/libds.la
-#AM_CXXFLAGS = -g -fopenmp -I$(top_srcdir)/lib -std=c++11
+#AM_CXXFLAGS = -g  -fopenmp -I$(top_srcdir)/lib -std=c++11
 all: all-am
 
 .SUFFIXES:
@@ -422,18 +417,13 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/insdcj.Po # am--include-marker
 include ./$(DEPDIR)/insdis.Po # am--include-marker
 include ./$(DEPDIR)/insknap.Po # am--include-marker
 include ./$(DEPDIR)/insmc.Po # am--include-marker
 include ./$(DEPDIR)/insmed.Po # am--include-marker
 include ./$(DEPDIR)/instance.Po # am--include-marker
 include ./$(DEPDIR)/list.Po # am--include-marker
-include ./$(DEPDIR)/listdcj.Po # am--include-marker
-include ./$(DEPDIR)/listdis.Po # am--include-marker
-include ./$(DEPDIR)/listknap.Po # am--include-marker
-include ./$(DEPDIR)/listmc.Po # am--include-marker
-include ./$(DEPDIR)/listmed.Po # am--include-marker
+include ./$(DEPDIR)/listint.Po # am--include-marker
 include ./$(DEPDIR)/main.Po # am--include-marker
 include ./$(DEPDIR)/plist.Po # am--include-marker
 include ./$(DEPDIR)/timer.Po # am--include-marker
@@ -599,18 +589,13 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/insdcj.Po
-	-rm -f ./$(DEPDIR)/insdis.Po
+		-rm -f ./$(DEPDIR)/insdis.Po
 	-rm -f ./$(DEPDIR)/insknap.Po
 	-rm -f ./$(DEPDIR)/insmc.Po
 	-rm -f ./$(DEPDIR)/insmed.Po
 	-rm -f ./$(DEPDIR)/instance.Po
 	-rm -f ./$(DEPDIR)/list.Po
-	-rm -f ./$(DEPDIR)/listdcj.Po
-	-rm -f ./$(DEPDIR)/listdis.Po
-	-rm -f ./$(DEPDIR)/listknap.Po
-	-rm -f ./$(DEPDIR)/listmc.Po
-	-rm -f ./$(DEPDIR)/listmed.Po
+	-rm -f ./$(DEPDIR)/listint.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/plist.Po
 	-rm -f ./$(DEPDIR)/timer.Po
@@ -660,18 +645,13 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/insdcj.Po
-	-rm -f ./$(DEPDIR)/insdis.Po
+		-rm -f ./$(DEPDIR)/insdis.Po
 	-rm -f ./$(DEPDIR)/insknap.Po
 	-rm -f ./$(DEPDIR)/insmc.Po
 	-rm -f ./$(DEPDIR)/insmed.Po
 	-rm -f ./$(DEPDIR)/instance.Po
 	-rm -f ./$(DEPDIR)/list.Po
-	-rm -f ./$(DEPDIR)/listdcj.Po
-	-rm -f ./$(DEPDIR)/listdis.Po
-	-rm -f ./$(DEPDIR)/listknap.Po
-	-rm -f ./$(DEPDIR)/listmc.Po
-	-rm -f ./$(DEPDIR)/listmed.Po
+	-rm -f ./$(DEPDIR)/listint.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/plist.Po
 	-rm -f ./$(DEPDIR)/timer.Po

@@ -138,7 +138,7 @@ Utils::q_sort_two(int *key, int *val, int left, int right)
 
 /**
  * sort only one array
- * **/
+**/
 void 
 Utils::q_sort(int *numbers, int left, int right)
 {
@@ -150,26 +150,95 @@ Utils::q_sort(int *numbers, int left, int right)
 	while (left < right)
 	{
 		while ((numbers[right] >= pivot) && (left < right))
+        {
 			right--;
+        }
+
 		if (left != right)
 		{
 			numbers[left] = numbers[right];
 			left++;
 		}
+
 		while ((numbers[left] <= pivot) && (left < right))
+        {
 			left++;
+        }
+
 		if (left != right)
 		{
 			numbers[right] = numbers[left];
 			right--;
 		}
 	}
+
 	numbers[left] = pivot;
 	pivot = left;
 	left = l_hold;
 	right = r_hold;
+
 	if (left < pivot)
+    {
 		q_sort(numbers, left, pivot-1);
+    }
+
 	if (right > pivot)
+    {
 		q_sort(numbers, pivot+1, right);
+    }
+}
+
+/**
+ * @brief   From a file name (not) contains full path,
+ *          find the real name.
+ *
+ * @param[in]       full_path_name  The file with(out) full path.
+ * @param[in]       size1           The full_path_name buffer size.
+ * @param[out]      file_name       The file deprived of full path.
+ * @param[in]       size2           The file_name buffer size.
+ *
+ * @return      File name deprived of full path.
+ *
+ * TODO     Treat windows and linux diffrerently.
+**/
+void Utils::get_file_name(const char *full_path_name, int16_t size1, char *file_name, int16_t size2)
+{
+    //assert(size1 <= size2);
+    //assert(size2 <= OPTKIT_FILE_SIZE);
+
+    //char    ret[OPTKIT_FILE_SIZE];
+    //int16_t last_slash_pos = OPTKIT_ZERO;
+    //size_t  full_path_size = strlen(full_path_name);
+
+    //for(int16_t i=full_path_size-1; i>=0; i--)
+    //{
+    //    if(full_path_name[i] == '/')
+    //    {
+    //        last_slash_pos = i;
+    //    }
+    //}
+
+    //snprintf(ret, size, "%s", full_path_name+last_slash_pos);
+}
+
+/**
+ * @brief   Given a path and a full path name, concate this path,
+ *          and the real file name, to form a new full path name.
+ *
+ * @param[in]       full_path_name  The file with(out) full path.
+ * @param[in]       size1           The full_path_name buffer size.
+ * @param[out]      file_name       The file deprived of full path.
+ * @param[in]       size2           The file_name buffer size.
+ * @param[out]      file_name       The file deprived of full path.
+ * @param[in]       size2           The file_name buffer size.
+ *
+ * @return      N/A
+**/
+void Utils::concate_path(const char *path, const char *full_path_name, int16_t size2, const char* concated, int size3)
+{
+    //char file_name[OPTKIT_FILE_SIZE];
+    //Utils::get_file_name(full_path_name, size2, file_name, OPTKIT_FILE_SIZE);
+    //
+    //assert(strlen(file_name)+strlen(path) < size3);
+    
 }

@@ -1,16 +1,11 @@
 #include "list.h"
 #include "insknap.h"
-#include "insdcj.h"
 #include "insmed.h"
 #include "insmc.h"
-#include "listmc.h"
-#include "listknap.h"
-#include "listdcj.h"
-#include "listmed.h"
+#include "listint.h"
 #include "instance.h"
 #include "plist.h"
 #include "insdis.h"
-#include "listdis.h"
 #include <getopt.h>
 
 
@@ -36,58 +31,60 @@ int main(int argc , char *argv[]){
 
     int seq_len;
     bool is_CC_separation = false;
-    bool is_dis = false;
-    bool is_dcj =false;
-    bool is_med =false;
-    bool is_knap =false;
-    bool is_mc = false;
-    bool is_cal_bij = false;
-    int heu_level =2;
-    int term_move =3;
-    bool is_opt = false;
-    char *input_file;
-    char *output_file;
-    char *output_dir;
-    char *bij_file;
-    char *dict_file;
-    char *tmp_folder;
-    int dis_mode=1;
-    int num_t=1;
-    int c;
-    char *opt_file;
+    bool is_dis           = false;
+    bool is_dcj           = false;
+    bool is_med           = false;
+    bool is_knap          = false;
+    bool is_mc            = false;
+    bool is_cal_bij       = false;
+    int heu_level         = 2;
+    int term_move         = 3;
+    bool is_opt           = false;
+    char *input_file      = NULL;
+    char *output_file     = NULL;
+    char *output_dir      = NULL;
+    char *bij_file        = NULL;
+    char *dict_file       = NULL;
+    char *tmp_folder      = NULL;
+    int dis_mode          = 1;
+    int num_t             = 1;
+    int c                 = -1;
+    char *opt_file        = NULL;
+    char *logger          = NULL;
 
     while (1)
     {
         static struct option long_options[] =
         {   
             /* These options set a flag. */
-            {"verbose", no_argument,       &verbose_flag, 1}, 
-            {"brief",   no_argument,       &verbose_flag, 0}, 
+            {"verbose",     no_argument,       &verbose_flag, 1}, 
+            {"brief",       no_argument,       &verbose_flag, 0}, 
             /* These options don't set a flag.
              * We distinguish them by their indices. */
-            {"dis",     no_argument,       0, 'D'},
-            {"dcj",     no_argument,       0, 'd'},
-            {"median",  no_argument,       0, 'm'},
-            {"knap",    no_argument,       0, 'k'},
-            {"cal_bij",    no_argument,       0, 'j'},
-            {"mc",    no_argument,       0, 'C'},
-            {"CC",    no_argument,       0, 'c'},
-            {"dis_mode",	required_argument, 	0, 'M'},
-            {"num_t",    required_argument,       0, 't'},
-            {"input_file",    required_argument,       0, 'f'},
-            {"output_file",    required_argument,       0, 'F'},
+            {"dis",         no_argument,             0, 'D'},
+            {"dcj",         no_argument,             0, 'd'},
+            {"median",      no_argument,             0, 'm'},
+            {"knap",        no_argument,             0, 'k'},
+            {"cal_bij",     no_argument,             0, 'j'},
+            {"mc",          no_argument,             0, 'C'},
+            {"CC",          no_argument,             0, 'c'},
+            {"dis_mode",	required_argument, 	     0, 'M'},
+            {"num_t",       required_argument,       0, 't'},
+            {"input_file",  required_argument,       0, 'f'},
+            {"output_file", required_argument,       0, 'F'},
             {"bij_file",    required_argument,       0, 'J'},
-            {"dict_file",    required_argument,       0, 'T'},
-            {"output_dir",    required_argument,       0, 'r'},
-            {"p_mode",    required_argument,       0, 'p'},
-            {"heu_level",    required_argument,       0, 'l'},
-            {"term_move",    required_argument,       0, 'v'},
-            {"is_opt",    required_argument,       0, 'o'},
+            {"dict_file",   required_argument,       0, 'T'},
+            {"output_dir",  required_argument,       0, 'r'},
+            {"p_mode",      required_argument,       0, 'p'},
+            {"heu_level",   required_argument,       0, 'l'},
+            {"term_move",   required_argument,       0, 'v'},
+            {"is_opt",      required_argument,       0, 'o'},
             {"opt_file",    required_argument,       0, 'O'},
-            {"seq_len",    required_argument,       0, 'L'},
-            {"tmp_folder",    required_argument,       0, '1'},
-            {"help",    no_argument,       0, 'h'},
-            {0, 0, 0, 0}
+            {"seq_len",     required_argument,       0, 'L'},
+            {"tmp_folder",  required_argument,       0, '1'},
+            {"logger",      required_argument,       0, '2'},
+            {"help",        no_argument,             0, 'h'},
+            {0,             0,                       0,  0 }
         }; 
         int option_index = 0;
         c = getopt_long (argc, argv, "df:hjJ:kl:mo:p:t:T:v:1:", 
@@ -206,6 +203,11 @@ int main(int argc , char *argv[]){
                     tmp_folder = optarg;
                     break;
                 }
+            case '2':
+                {
+                    logger = optarg;
+                    break;
+                }
             case '?':
                 {
                     print_help();
@@ -224,19 +226,33 @@ int main(int argc , char *argv[]){
     }
     if(is_mc == true)
     {
+        printf("Start initialization of instances!\n");
+
         Instance** ins = (Instance**)malloc(sizeof(InsMC*)*2);
-        ins[0] = new InsMC(input_file, output_file);
+        if(logger != NULL)
+        {
+            char lf_insmc[OPTKIT_FILE_SIZE];
+            char input_f[OPTKIT_FILE_SIZE];
+            //Utils::get_file_name(logger, input_f, OPTKIT_FILE_SIZE);
+            snprintf(lf_insmc, OPTKIT_FILE_SIZE, "%s%s", logger, input_f);
+            ins[0] = new InsMC(input_file, NULL, lf_insmc);
+        }
         ins[1] = new InsMC(input_file);
+
         printf("finished initialization of instances!\n");
-        int buck_size = ins[0]->upper_bound - ins[0]->lower_bound + 2;
-        int list_size = 100000;
-        int base = ins[0]->lower_bound-1;
-        int num_t = 1;
-        int num_elem = ins[0]->num_count;
-        bool is_ub = true;
-        bool is_enumerate_all = true;
-        MCList *list = new MCList(buck_size, list_size, 
-                        base, num_t, is_ub, is_enumerate_all, num_elem);
+
+        int buck_size    = ins[0]->upper_bound - ins[0]->lower_bound + 2;
+        int list_size    = 100000;
+        int base         = ins[0]->lower_bound-1;
+        int num_t        = 1;
+        int num_elem     = ins[0]->num_count;
+        bool is_ub       = true;
+        bool is_enum_all = true;
+        IntList *list = new IntList(buck_size, list_size, 
+                                    base,      num_t, 
+                                    is_ub,     num_elem, 
+                                    &is_enum_all);
+        exit(1);
         list->bnb(ins, 0);
     }
     if(is_dis == true)
@@ -249,8 +265,8 @@ int main(int argc , char *argv[]){
             {
                 if(is_cal_bij)
                 {
-                    ins[i] = new InsDis(input_file, dict_file, bij_file, 
-                            true, true);
+                    bool is_cal_bij = true;
+                    ins[i] = new InsDis(input_file, true, NULL, dict_file, bij_file, &is_cal_bij);
                 }
                 else
                 {
@@ -264,8 +280,7 @@ int main(int argc , char *argv[]){
             {
                 if(is_cal_bij)
                 {
-                    ins[i] = new InsDis(input_file, dict_file, bij_file, 
-                            true, false); 
+                    ins[i] = new InsDis(input_file, false, NULL, dict_file, bij_file, &is_cal_bij);
                 }
                 else
                 {
@@ -290,7 +305,7 @@ int main(int argc , char *argv[]){
         {
             num_elem = 1000;
         }
-        DISList *list = new DISList(buck_size, list_size, 
+        IntList *list = new IntList(buck_size, list_size, 
                         base, num_t, true, num_elem);
         list->bnb(ins, 0);
         FILE *writer = fopen(opt_file, "a");
@@ -299,103 +314,6 @@ int main(int argc , char *argv[]){
         printf("num_extern_comp: %d\n", 
                     (list->lower_bound+list->upper_bound)/2);
         fclose(writer);
-    }
-    if(is_dcj == true)
-    {
-        if(parallel_mode == MODE_SEQ)
-        {
-            /* test sequential algorithm for dcj distance */
-            Instance** ins = (Instance**)malloc(sizeof(InsDCJ*)*2);
-            for(int i=0; i<2; i++)
-            {
-                ins[i] = new InsDCJ(input_file, 0);
-            }
-            printf("finished initialization of instances!\n");
-            int buck_size = ins[0]->upper_bound - ins[0]->lower_bound + 2;
-            int list_size = 100000;
-            int base = ins[0]->lower_bound-1;
-            int num_t = 1;
-            int num_elem = ins[0]->num_count;
-            DCJList *list = new DCJList(buck_size, list_size, 
-                            base, num_t, false, num_elem);
-            list->bnb(ins, 0);
-#ifdef USE_SPC
-            printf("search space %d\n", list->search_space);
-#endif
-            printf("end sequential processing!\n");
-        }
-        if(parallel_mode == MODE_PAR)
-        {
-            /* test sequential algorithm for dcj distance */
-            printf("start parallel bucket processing!\n");
-            Instance** ins = (Instance**)malloc(sizeof(InsDCJ*)*num_t+1);
-            for(int i=0; i<num_t+1; i++)
-            {
-                ins[i] = new InsDCJ(input_file, i);
-            }
-            printf("finished initialization of instances!\n");
-            int buck_size = ins[0]->upper_bound - ins[0]->lower_bound + 2;
-            int list_size = 100000;
-            int base = ins[0]->lower_bound;
-            int num_elem = ins[0]->num_count;
-            DCJList *list = new DCJList(buck_size, list_size, 
-                            base, num_t, false, num_elem);
-            list->parallel_base = 5;
-            list->bnb_parallel_bucket(ins);
-            printf("time taken %f  %f %f %f %f %f \n", 
-                list->t.list[0].time, list->t.list[1].time, 
-                list->t.list[2].time, list->t.list[3].time, 
-                list->t.list[4].time, list->t.list[5].time);
-#ifdef USE_SPC
-            printf("search space %d\n", list->search_space);
-#endif
-#ifdef USE_BW
-            long long bytes=0;
-            bytes += (2*list->read_cnt + list->read_num +
-                    3*list->write_cnt + 2*list->write_num);
-            printf("bytes %lld\n", bytes*4);
-#endif
-            printf("end parallel bucket processing!\n");
-        }
-        else if(parallel_mode == MODE_TPAR)
-        {
-            printf("start parallel thread processing!\n");
-            Instance** p_ins = (Instance**)malloc(sizeof(Instance*)*(num_t+1));
-            for(int i=0; i<=num_t; i++) 
-                p_ins[i] = new InsDCJ(input_file, i); 
-            int buck_size = p_ins[0]->upper_bound - p_ins[0]->lower_bound + 2;
-            int list_size = 1000000;
-            int base = p_ins[0]->lower_bound;
-            int num_elem = p_ins[0]->num_count; 
-            PList *pl = new PList(p_ins[0]->lower_bound, 
-                        p_ins[0]->upper_bound, num_t);
-            pl->base = base;
-            pl->num_threads = num_t;
-            pl->thresh = 100;
-            pl->p_lists = (List**)malloc(sizeof(List*)*num_t);
-            for(int i=0; i<num_t; i++)
-                pl->p_lists[i] = new DCJList(buck_size, 
-                                    list_size, base, num_t, false, num_elem);
-            pl->bnb_parallel_threads_lb(p_ins);
-#ifdef USE_SPC
-            int space = 0;
-            for(int i=0; i<num_t; i++)
-            {
-                space += pl->p_lists[i]->search_space;
-            }   
-            printf("search space %d\n", space);
-#endif
-#ifdef USE_BW
-            long long int bytes=0;
-            for(int i=0; i<num_t; i++)
-            {
-                bytes += (2*pl->p_lists[i]->read_cnt + pl->p_lists[i]->read_num +
-                        3*pl->p_lists[i]->write_cnt + 2*pl->p_lists[i]->write_num);
-            }   
-            printf("bytes %lld\n", bytes*4);
-#endif
-            printf("end parallel thread processing!\n");
-        } 
     }
     if(is_med == true)
     {
@@ -420,7 +338,7 @@ int main(int argc , char *argv[]){
                 int list_size = 100000;
                 int base = 0; //based will be 0 as there is no need to control position by upper or lower bound
                 int num_elem = ins[0]->num_count;
-                MedList *list = new MedList(buck_size, list_size, 
+                IntList *list = new IntList(buck_size, list_size, 
                                 base, num_t, true, num_elem);
                 list->upper_bound = ins[0]->upper_bound;
                 if(j==0)
@@ -431,9 +349,6 @@ int main(int argc , char *argv[]){
                     dis = list->upper_bound;
             }
             printf("dis0 %d dis1 %d \n", dis0, dis);
-#ifdef USE_SPC
-            //printf("search space %d\n", list->search_space);
-#endif
             printf("end parallel bucket processing!\n");
         }
         if(parallel_mode == MODE_SEQ)
@@ -445,7 +360,9 @@ int main(int argc , char *argv[]){
             {
                 printf("init %d\n", i);
                 which_med = i;
-                ins[i] = new InsMed(input_file, tmp_folder, i, dis_mode, true, 2);
+                bool uh = true;
+                int th = 2;
+                ins[i] = new InsMed(input_file, tmp_folder, i, NULL, &dis_mode, &uh, &th);
             }
             printf("initial upper_bound %d lower_bound %d!\n", 
                     ins[0]->upper_bound, ins[0]->lower_bound);
@@ -456,7 +373,7 @@ int main(int argc , char *argv[]){
                control position by upper or lower bound */
             int base = 0; 
             int num_elem = ins[0]->num_count;
-            MedList *list = new MedList(buck_size, list_size, 
+            IntList *list = new IntList(buck_size, list_size, 
                             base, num_t, true, num_elem);
             list->upper_bound = ins[0]->upper_bound;
             /* compute the real score */
@@ -479,7 +396,7 @@ int main(int argc , char *argv[]){
             int list_size = 100000;
             int base = ins[0]->lower_bound-1;
             int num_elem = ins[0]->num_count; 
-            KnapList *list = new KnapList(buck_size, list_size, 
+            IntList *list = new IntList(buck_size, list_size, 
                                 base, num_t, true, num_elem);	
             list->bnb(ins, 0);	
             //printf("time taken %f  %f %f %f %f %f \n", 
@@ -503,7 +420,7 @@ int main(int argc , char *argv[]){
             int list_size = 1000000;
             int base = p_ins[0]->lower_bound-1; 
             int num_elem = p_ins[0]->num_count;
-            KnapList *p_list = new KnapList(buck_size, list_size, 
+            IntList *p_list = new IntList(buck_size, list_size, 
                                 base, num_t, true, num_elem);
             p_list->parallel_base = 100;
             p_list->bnb_parallel_bucket(p_ins);	
@@ -539,7 +456,7 @@ int main(int argc , char *argv[]){
             pl->p_lists = (List**)malloc(sizeof(List*)*num_t);
             for(int i=0; i<num_t; i++)
             {
-                pl->p_lists[i] = new KnapList(buck_size, 
+                pl->p_lists[i] = new IntList(buck_size, 
                                     list_size, base, num_t, true, num_elem);
                 pl->p_lists[i]->parallel_base = 100;
             }
@@ -568,7 +485,17 @@ int main(int argc , char *argv[]){
 
 void
 print_help(){
-    printf("\n\nOPTKit: Optimization Tool-kit for Prallellizing Discrete Combinatoric Problems in Emerging Platforms (2013-2014)\n\n"); 
+    printf("\n\nOPTKit: Optimization Tool-kit for Prallellizing Discrete Combinatoric Problems in Emerging Platforms (2013-2015)\n\n"); 
+    printf("usage:\n"
+           "optkit <--dis                                  |\n" 
+           "        --dcj                                  |\n" 
+           "        --median                               |\n" 
+           "        --knap                                 |\n" 
+           "        --cal_bij                              |\n" 
+           "        --mc --input_file <graph_file>         |\n" 
+           "        --CC                                   >\n"
+           "       [--logger <log folder>]\n\n\n"
+          );
     printf("--dis       is calculate dcj distance with unequal content genomes\n");
     printf("--dcj       is calculate dcj\n");
     printf("--median    is calculate median\n");
@@ -583,6 +510,7 @@ print_help(){
     printf("--bij_file <file_name>      assign bijection output file\n");
     printf("--dict_file <file_name>     assign mapping dictionary file\n");
     printf("--output_dir <dir_name>     assign output directory name\n");
+    printf("--logger <logger_folder>    logger folder position\n");
     printf("--p_mode <1|2|3>            1:sequential " 
             "2:parallel_bucket " 
             "3:parallel_threading\n");

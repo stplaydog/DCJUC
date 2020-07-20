@@ -24,8 +24,7 @@ public:
 	int *branch_id;
 	int *sorted;
 	int *map;
-public:
-	InsKnapsack(char *file, int tid);
+	InsKnapsack(const char *file, int tid, const char *lf = NULL);
 	InsKnapsack(const InsKnapsack &other);
 	void to_branch(int which_branch);
 	void from_branch();

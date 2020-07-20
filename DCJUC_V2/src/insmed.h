@@ -5,7 +5,7 @@
 
 #include "instance.h"
 #include "list.h"
-#include "listdis.h"
+#include "listint.h"
 #include "insdis.h"
 #include <cstdio>
 #include <cstdlib>
@@ -50,9 +50,7 @@ public:
     int thresh;             ///< heuristic threshold
     bool is_branching;      ///< when compute_bound, turn this on or off matters
 
-public:
-    InsMed(char *file, char* tmp_folder, int tid);
-    InsMed(char *file, char* tmp_folder, int tid, int dm, bool uh, int th);
+    InsMed(const char *file, const char* tmp_folder, int tid, const char *lf = NULL, const int *dm = NULL, const bool *uh = NULL, const int *th = NULL);
     InsMed(const InsMed &other);
     void to_branch(int which_branch);
     void from_branch();

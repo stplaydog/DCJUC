@@ -25,15 +25,22 @@ string map[7] = {"","pi_open","gamma_open","cycle","end","none","out"};
 /**
  * constructor 
  *
- * @param[in]       f       input of the graph file
- * @param[in]       is_exe  indicate if using exemplar distance
+ * @param[in]       f           input of the graph file
+ * @param[in]       is_exe      indicate if using exemplar distance
+ * @param[in]       fd          input of the dictionary file
+ * @param[out]      fbi         output of the bijection file
+ * @param[in]       is_cal_bij  indicate if calculate bijection or not
  *
  * TODO upper and lower bound are not the smae
  * **/
-InsDis::InsDis(char *f, bool is_exe)
+InsDis::InsDis(const char *f, bool is_exe, const char *lf, const char* fd, const char* fbi, const bool *is_cal_bij) : 
+    Instance(lf)
 {
-    file = (char*)malloc(sizeof(char)*500);
-    file = f;
+    if(f != NULL)
+    {
+        file = new char[OPTKIT_FILE_SIZE];
+        snprintf(file, OPTKIT_FILE_SIZE, "%s", f);
+    }
     /* some member variables */
     comb_size = 0;
     v_size = 0;
@@ -42,56 +49,46 @@ InsDis::InsDis(char *f, bool is_exe)
     /* some basic info */
     is_exem = is_exe;
     is_ub = true;
-    vet = NUL;
-    branch_id = NUL;
-    upper_bound = NUL;
-    lower_bound = NUL;
-    num_branch = NUL;
+    vet = OPTKIT_NULL;
+    branch_id = OPTKIT_NULL;
+    upper_bound = OPTKIT_NULL;
+    lower_bound = OPTKIT_NULL;
+    num_branch = OPTKIT_NULL;
     /* init graph and init some related data structures */
     init_graph();
     /* turn csr format into adj format the reason why we need csr is */
     /* that csr can help to compress the graph */
     from_csr_to_adj();
     /* at this time, there is no branch, so branch_id is -1 */
-    branch_id = NUL;
-    vet = NUL;
+    branch_id = OPTKIT_NULL;
+    vet = OPTKIT_NULL;
     compute_bound();
     get_num_elem();
     count=0;
-}
 
-/**
- * Delegate constructor, which initiate bijection related variables
- *
- * @param[in]       f           input of the graph file
- * @param[in]       fd          input of the dictionary file
- * @param[out]      fbi         output of the bijection file
- * @param[in]       is_exe      indicate if using exemplar distance
- * @param[in]       is_cal_bij  indicate if calculate bijection or not
-**/
-InsDis::InsDis(char* f, char* fd, char* fbi, bool is_exe, bool is_cal_bij) : 
-        InsDis(f, is_exe)
-{
-    is_calculate_bijection = is_cal_bij;
-
-    bij_file = (char*)malloc(sizeof(char)*500);
-    memcpy(bij_file, fbi, strlen(fbi));
-
-    bijection = (int**)malloc(sizeof(int*)*2);
-    for(int i=0; i<2; i++)
+    if(is_cal_bij != NULL)
     {
-        bijection[i] = (int*)malloc(sizeof(int)*v_size*4);
+        is_calculate_bijection = is_cal_bij;
+
+        bij_file = (char*)malloc(sizeof(char)*OPTKIT_FILE_SIZE);
+        memcpy(bij_file, fbi, strlen(fbi));
+
+        bijection = (int**)malloc(sizeof(int*)*2);
+        for(int i=0; i<2; i++)
+        {
+            bijection[i] = (int*)malloc(sizeof(int)*v_size*4);
+        }
+        bij_idx = (int*)malloc(sizeof(int)*2);
+        bij_idx[0] = 0;
+        bij_idx[1] = 0;
+
+        dict_file = (char*)malloc(sizeof(char)*OPTKIT_FILE_SIZE);
+        memcpy(dict_file, fd, strlen(fd));
+        dict = (int*)malloc(v_size*4); 
+
+        /* read dictionary files */
+        read_dict();
     }
-    bij_idx = (int*)malloc(sizeof(int)*2);
-    bij_idx[0] = 0;
-    bij_idx[1] = 0;
-
-    dict_file = (char*)malloc(sizeof(char)*500);
-    memcpy(dict_file, fd, strlen(fd));
-    dict = (int*)malloc(v_size*4); 
-
-    /* read dictionary files */
-    read_dict();
 }
 
 
@@ -186,11 +183,6 @@ InsDis::compute_bound()
     {
         get_matching_adj(vet, branch_id);
     }
-    //if(g_count == 350 && which_med == 1)
-    //{
-    //    vis_adj();
-    //    exit(1);
-    //}
 
     /* compute the lower bound */
     a_size = is_exem?v_size:num_v_after_relabel;
@@ -297,7 +289,7 @@ InsDis::get_encode(int *encode)
     }
     /* cope the rest */
     /* do if exemplar */
-    if(is_exem==true && vet != NUL)
+    if(is_exem==true && vet != OPTKIT_NULL)
     {
         for(int c=0; c<2; c++)
         {
@@ -341,7 +333,7 @@ InsDis::get_encode(int *encode)
         }
     }
     /* do if matching */
-    else if(is_exem == false && vet != NUL)
+    else if(is_exem == false && vet != OPTKIT_NULL)
     {
         /* color 1 */
         int avail = avail_id;
@@ -638,7 +630,7 @@ InsDis::get_deletion_adj(int vet, int comb_id, bool is_exem)
     {
         for(int i=0; i<a_size; i++)
         {
-            a[c][i] = NUL;
+            a[c][i] = OPTKIT_NULL;
         }
     }
     for(int i=0; i<v_size; i++)
@@ -653,12 +645,12 @@ InsDis::get_deletion_adj(int vet, int comb_id, bool is_exem)
                     int from = i;
                     int to = adj[c][from][comb[comb_id][c]];
                     /* another patch */
-                    if(a[c][to] != NUL) 
+                    if(a[c][to] != OPTKIT_NULL) 
                     {
                         int toto = a[c][to];
                         if(toto != CUP)
                         {
-                            a[c][toto] = NUL;
+                            a[c][toto] = OPTKIT_NULL;
                         }
                     }
                     a[c][from] = to; 
@@ -705,12 +697,12 @@ InsDis::get_deletion_adj(int vet, int comb_id, bool is_exem)
                 int c_another = c==0?1:0;
                 /* just delete */
                 if((adj_idx[c][i] > 1 || adj_idx[c_another][i] > 1) 
-                        && a[c][i]==NUL)
+                        && a[c][i]==OPTKIT_NULL)
                 {
-                    a[c][i] = NUL;
+                    a[c][i] = OPTKIT_NULL;
                 }
                 /* just copy */
-                else if(adj_idx[c][i] == 1 && a[c][i]==NUL)
+                else if(adj_idx[c][i] == 1 && a[c][i]==OPTKIT_NULL)
                 { 
                     /* because it might be zero */
                     int from = i;
@@ -745,7 +737,7 @@ InsDis::get_exemplar_adj(int vet, int comb_id)
         /* before execution init a and a_size and vet_type */
         for(int i=0; i<v_size; i++)
         {
-            a[c][i] = NUL;
+            a[c][i] = OPTKIT_NULL;
         }
         for(int i=0; i<v_size; i++)
         {
@@ -755,17 +747,17 @@ InsDis::get_exemplar_adj(int vet, int comb_id)
             {
                 from = i;
                 to = adj[c][from][comb[comb_id][c]];
-                if(to == NUL)
+                if(to == OPTKIT_NULL)
                 {
                     printf("vet %d from %d comb[comb_id][c] %d comb_id %d \n", vet, from, comb[comb_id][c], comb_id);
                     vis_adj();
                     exit(1);
                 }
                 /* already assigned, should roll back this operation */
-                if(to != CAP && a[c][to] != NUL ) 
+                if(to != CAP && a[c][to] != OPTKIT_NULL ) 
                 {
                     int toto = a[c][to];
-                    a[c][toto] = NUL;
+                    a[c][toto] = OPTKIT_NULL;
                 }
                 a[c][from] = to; 
                 a[c][to] = from; 
@@ -776,7 +768,7 @@ InsDis::get_exemplar_adj(int vet, int comb_id)
                     bijection[c][bij_idx[c]++] = to; 
                 }
             }
-            else if(a[c][i]==NUL && adj_idx[c][i]>0 
+            else if(a[c][i]==OPTKIT_NULL && adj_idx[c][i]>0 
                 && check_if_in_to(i, c)==false)
             {
                 from = i;
@@ -792,7 +784,7 @@ InsDis::get_exemplar_adj(int vet, int comb_id)
                 {
                     ;
                 }
-                else if(a[c][to] != NUL)
+                else if(a[c][to] != OPTKIT_NULL)
                 {
                     ;
                 }
@@ -825,7 +817,7 @@ InsDis::get_matching_adj(int vet, int comb_id)
     {
         for(int i=0; i<num_v_after_relabel; i++)
         {
-            a[c][i] = NUL;
+            a[c][i] = OPTKIT_NULL;
         }
     }
     int avail = avail_id;
@@ -874,7 +866,7 @@ InsDis::get_matching_adj(int vet, int comb_id)
                 {
                     continue;
                 }
-                if(a[c][i] == NUL && adj_idx[c][i]>0)
+                if(a[c][i] == OPTKIT_NULL && adj_idx[c][i]>0)
                 {
                     for(int j=0; j<adj_idx[c][i]; j++)
                     {
@@ -883,7 +875,7 @@ InsDis::get_matching_adj(int vet, int comb_id)
                         /* in case that two duplicated vertices */
                         /* are connected, only one stretch is needed */
                         if(check_if_in_to(to, c)==false && 
-                            a[c][to] == NUL && 
+                            a[c][to] == OPTKIT_NULL && 
                             (adj_idx[c][to]==1 || to>from))
                         {
                             a[c][from] = to;
@@ -903,7 +895,7 @@ InsDis::get_matching_adj(int vet, int comb_id)
                         }
                         int from = ava[c];
                         int to = adj[c][i][j];
-                        if(a[c][to] ==NUL && a[c][from]==NUL)
+                        if(a[c][to] ==OPTKIT_NULL && a[c][from]==OPTKIT_NULL)
                         {
                             a[c][from] = to;
                             a[c][to] = from;
@@ -932,7 +924,7 @@ InsDis::get_matching_adj(int vet, int comb_id)
                     {
                         int from = ava[c]++;
                         int to = adj[c][i][j];
-                        if(a[c][from]==NUL && a[c][to]==NUL)
+                        if(a[c][from]==OPTKIT_NULL && a[c][to]==OPTKIT_NULL)
                         {
                             a[c][from] = to;
                             a[c][to] = from;
@@ -1119,7 +1111,7 @@ void
 InsDis::scan_graph(){
     /* declare variables */
     FILE *stream;
-    char file_buf[500];
+    char file_buf[OPTKIT_FILE_SIZE];
     int v_num;
     int e_num;
     int g_num;
@@ -1207,7 +1199,7 @@ void
 InsDis::read_graph()
 {
     FILE *stream;
-    char file_buf[500];
+    char file_buf[OPTKIT_FILE_SIZE];
     int v_num;
     int e_num;
     int g_num;
@@ -1267,19 +1259,19 @@ InsDis::set_vet_type(int size)
 {
     for(int i=0;i<size; i++)
     {
-        if(a[1][i]!=NUL && a[1][i]!=CAP 
-            && a[0][i]==NUL && a[0][i]!=CUP 
+        if(a[1][i]!=OPTKIT_NULL && a[1][i]!=CAP 
+            && a[0][i]==OPTKIT_NULL && a[0][i]!=CUP 
             && a[1][i] != CUP)
         {
             vet_type[i]=PI_OPEN;
         }
-        else if(a[0][i]!=NUL && a[0][i]!=CAP 
-            && a[1][i]==NUL && a[0][i]!=CUP 
+        else if(a[0][i]!=OPTKIT_NULL && a[0][i]!=CAP 
+            && a[1][i]==OPTKIT_NULL && a[0][i]!=CUP 
             && a[1][i] != CUP)
         {
             vet_type[i]=GAMMA_OPEN;
         }
-        else if(a[0][i]!=NUL && a[1][i]!=NUL && 
+        else if(a[0][i]!=OPTKIT_NULL && a[1][i]!=OPTKIT_NULL && 
                 a[0][i]!=CAP && a[1][i]!=CAP &&
                 a[0][i]!=CUP && a[1][i] != CUP)
         {
@@ -1487,7 +1479,7 @@ InsDis::compute_indel_dis(){
             while(1)
             {
                 right = a[tmp_c1][left];
-                if(right == NUL)
+                if(right == OPTKIT_NULL)
                 {
                     break;
                 }
@@ -1548,7 +1540,7 @@ InsDis::compute_indel_dis(){
             while(1)
             {
                 right = a[tmp_c1][left];
-                if(right == NUL)
+                if(right == OPTKIT_NULL)
                 {
                     break;
                 }
@@ -1635,7 +1627,7 @@ InsDis::compute_indel_dis(){
 bool 
 InsDis::check_if_in_to(int v, int c){
     bool result = false;
-    if(vet==NUL)
+    if(vet==OPTKIT_NULL)
     {
         return result;
     }
@@ -1837,7 +1829,7 @@ InsDis::vis_a(int size)
         const char *c_str = c==0?"red":"blue";
         for(int i=0; i<size; i++)
         {
-            if(a[c][i] != NUL)
+            if(a[c][i] != OPTKIT_NULL)
             {
                 fprintf(writer, "%d -- %d [color=%s];\n", i, a[c][i], c_str);
             }

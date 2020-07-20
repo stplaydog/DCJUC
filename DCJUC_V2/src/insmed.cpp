@@ -1,6 +1,5 @@
 #include "insmed.h"
-#include "insdcj.h"
-#include "listdcj.h"
+#include "listint.h"
 #include <fstream>
 #include <string>
 #include <cmath>
@@ -23,16 +22,32 @@ extern int g_count;
  * it is supposed to implement the adequate subgraph algorithm
  * but due to the limit of time, this task is postponded to the future work.
  *
- * @param[in]       file        where to read the graph file
- * @param[in]       tmp_folder  folder to keep tmp files
- * @param[in]       tid         thread number
+ * @param[in]       file            where to read the graph file
+ * @param[in]       tmp_folder      folder to keep tmp files
+ * @param[in]       tid             thread number
+ * @param[in]       dm              distance mode exemplar:1 matching:2
+ * @param[in]       uh              if use heuristic
+ * @param[in]       th              threshold for heuristic
+ *
+ * @return      N/A
 **/
-InsMed::InsMed(char *file, char* tmp_folder, int tid)
+InsMed::InsMed(const char *file, const char* tmp_folder, int tid, const char *lf, const int *dm, const bool *uh, const int *th) :
+    Instance(lf)
 {
+    m_file       = NULL;
+    m_tmp_folder = NULL;
     num_t = tid;
     /* read order from file */
-    m_file = file;
-    m_tmp_folder = tmp_folder;
+    if(file != NULL)
+    {
+        m_file = new char[OPTKIT_FILE_SIZE];
+        snprintf(m_file, OPTKIT_FILE_SIZE, "%s", file);
+    }
+    if(tmp_folder != NULL)
+    {
+        m_tmp_folder = new char[OPTKIT_FILE_SIZE];
+        snprintf(m_tmp_folder, OPTKIT_FILE_SIZE, "%s", tmp_folder);
+    }
     init_graph();
 
     /* decompose the graph by ASs */
@@ -53,26 +68,19 @@ InsMed::InsMed(char *file, char* tmp_folder, int tid)
     /* compute the initial bound */
     is_branching = false;
     compute_bound();
-}
 
-/**
- * delegate constructor
- *
- * @param[in]       file        where to read the graph file
- * @param[in]       tid         thread number
- * @param[in]       dm          distance mode exemplar:1 matching:2
- * @param[in]       uh          if use heuristic
- * @param[in]       th          threshold for heuristic
- *
-**/
-InsMed::InsMed(char* file, char* tmp_folder, int tid, int dm, bool uh, int th) 
-    : InsMed(file, tmp_folder, tid)
-{
-    m_tmp_folder = new char[100];
-    m_tmp_folder = tmp_folder;
-    dis_mode = dm;
-    use_heu = uh;
-    thresh = th;
+    if(dm != NULL)
+    {
+        dis_mode = *dm;
+    }
+    if(uh != NULL)
+    {
+        use_heu = *uh;
+    }
+    if(th != NULL)
+    {
+        thresh = *th;
+    }
 }
 
 
@@ -82,7 +90,8 @@ InsMed::InsMed(char* file, char* tmp_folder, int tid, int dm, bool uh, int th)
  * @param[in]       other       the instance tobe copied
  *
 **/
-InsMed::InsMed(const InsMed &other)
+InsMed::InsMed(const InsMed &other) :
+    Instance(NULL)
 {
 }
 
@@ -124,7 +133,7 @@ InsMed::from_branch()
         encode[i] = ft_now[i];
     }
     resume(encode);
-    branch_selected = NUL;
+    branch_selected = OPTKIT_NULL;
 }
 
 /**
@@ -461,14 +470,14 @@ void InsMed::init_dis_tools()
         {
             for(int j=0; j<2; j++)
             {
-                ins[i][j] = new InsDis(csr_file, true);
+                ins[i][j] = new InsDis(csr_file, true, NULL);
             }
         }
         else if(dis_mode == DIS_MODE_MATC)
         {
             for(int j=0; j<2; j++)
             {
-                ins[i][j] = new InsDis(csr_file, false);
+                ins[i][j] = new InsDis(csr_file, false, NULL);
             }
         }
         if(ins[i][0]->upper_bound == ins[i][0]->lower_bound)
@@ -482,7 +491,7 @@ void InsMed::init_dis_tools()
         int num_elem = ins[i][0]->num_count;
         //printf("buck_size %d list_size %d base %d num_tt %d, num_elem %d\n", 
         //    buck_size, list_size, base, num_tt, num_elem);
-        l_d[i] = new DISList(buck_size, list_size, base, num_tt, true, num_elem);
+        l_d[i] = new IntList(buck_size, list_size, base, num_tt, true, num_elem);
     }
 }
 
@@ -847,11 +856,11 @@ InsMed::init_median(){
     /* Assigning initial degrees for the CSR */
     for(int i=0; i<v_size; i++)
     {
-        v_idx[3][i] = NUL;
+        v_idx[3][i] = OPTKIT_NULL;
     }
     for(int i=0;i<v_size;i++)
     {
-        if(v_idx[3][i] == NUL)
+        if(v_idx[3][i] == OPTKIT_NULL)
         {
             int deg = get_deg(i);
             v_idx[3][i] = deg;
@@ -859,7 +868,7 @@ InsMed::init_median(){
     }
     for(int i=0;i<v_size;i++)
     {
-        if(v_idx[3][i] == NUL)
+        if(v_idx[3][i] == OPTKIT_NULL)
         {
             v_idx[3][i] = 0;
         }
@@ -877,7 +886,7 @@ InsMed::init_median(){
     /* randomly init edges */
     for(int i=0;i<e_size[3]; i++)
     {
-        e_idx[3][i] = NUL;
+        e_idx[3][i] = OPTKIT_NULL;
     }
     int *rev_v = new int[e_size[3]];
     for(int i=0; i<v_size; i++)
@@ -891,7 +900,7 @@ InsMed::init_median(){
     }
     for(int i=0; i<e_size[3]; i++)
     {
-        if(e_idx[3][i] == NUL)
+        if(e_idx[3][i] == OPTKIT_NULL)
         {
             int to = find_next_edge(rev_v, i);
             if(to != CAP)
@@ -1245,7 +1254,7 @@ InsMed::indentify_comps()
         for(int i=0; i<v_size; i++)
         {
             visited[i] = false;
-            comp_id[color][i]  = NUL;
+            comp_id[color][i]  = OPTKIT_NULL;
         }
         int comp_num = 0;
         for(int i=0; i<v_size; i++)
@@ -1281,7 +1290,7 @@ InsMed::indentify_comps()
                     for(int j=start; j<end; j++)
                     {
                         int to = e_idx[cc][j];
-                        if(to != NUL && to != CAP && visited[to]==false)
+                        if(to != OPTKIT_NULL && to != CAP && visited[to]==false)
                         {
                             comp_id[color][to] = comp_num;
                             queue[q_idx++] = to;

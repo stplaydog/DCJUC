@@ -119,11 +119,13 @@ main.o: main.cpp list.h \
  /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/stl_bvector.h \
  /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/functional_hash.h \
  /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/range_access.h \
- /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/vector.tcc \
+ /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/vector.tcc utils.h \
+ /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/cstring \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/string.h \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/strings.h \
  /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/assert.h \
  /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/stdlib.h insknap.h \
- insdcj.h insmed.h listdis.h insdis.h insmc.h listmc.h listknap.h \
- listdcj.h listmed.h plist.h \
+ insmed.h listint.h insdis.h insmc.h plist.h \
  /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/getopt.h \
  /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/unistd.h \
  /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/sys/unistd.h \
@@ -394,29 +396,27 @@ timer.h:
 
 /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/vector.tcc:
 
+utils.h:
+
+/usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/cstring:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/string.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/strings.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/assert.h:
 
 /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/stdlib.h:
 
 insknap.h:
 
-insdcj.h:
-
 insmed.h:
 
-listdis.h:
+listint.h:
 
 insdis.h:
 
 insmc.h:
-
-listmc.h:
-
-listknap.h:
-
-listdcj.h:
-
-listmed.h:
 
 plist.h:
 

@@ -119,7 +119,10 @@ plist.o: plist.cpp plist.h list.h \
  /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/stl_bvector.h \
  /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/functional_hash.h \
  /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/range_access.h \
- /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/vector.tcc \
+ /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/vector.tcc utils.h \
+ /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/cstring \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/string.h \
+ /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/strings.h \
  /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/assert.h \
  /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/stdlib.h \
  /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/iostream \
@@ -470,6 +473,14 @@ timer.h:
 /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/range_access.h:
 
 /usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/bits/vector.tcc:
+
+utils.h:
+
+/usr/local/Cellar/gcc@9/9.3.0/include/c++/9.3.0/cstring:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/string.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/strings.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX10.15.sdk/usr/include/assert.h:
 

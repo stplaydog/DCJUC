@@ -64,10 +64,8 @@ public:
     int pair_num;       ///< how many pairs there are
     int count;          ///< total count
 
-public:
     /* constructors and destructors */
-    InsDis(char *f, bool is_exem);
-    InsDis(char* f, char* fd, char* fbi, bool is_exe, bool is_cal_bij); 
+    InsDis(const char *f, bool is_exe, const char *lf = NULL, const char* fd = NULL, const char* fbi = NULL, const bool *is_cal_bij = NULL); 
     ~InsDis();
     void to_branch(int which_branch);
     void from_branch();

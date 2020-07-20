@@ -46,7 +46,7 @@ gdb_str="gdb --args"
 # folder information
 ####################
 #folder_now=/Users/zhaomingyin/gitlocal/optkit/
-folder_now=/scratch/zyin/optkit/optkit/
+folder_now=/Users/zhaomingyin/gitlocal/DCJUC/DCJUC_V2/
                         ##< current folder
 graph_folder=${folder_now}data/dist/graph/${config}/
                         ##< folder that stores graph
@@ -87,29 +87,30 @@ collect_dis=collect_dis.py
 # make directories
 ####################
 if [ ! -d "${irrCC_folder}" ]; then
-        mkdir ${irrCC_folder}
+        mkdir -p ${irrCC_folder}
 fi
 
 if [ ! -d "${opt_tmp_result_folder}" ]; then
-        mkdir ${opt_tmp_result_folder}
+        mkdir -p ${opt_tmp_result_folder}
 fi
 
 if [ ! -d "${assign_folder}" ]; then
-        mkdir ${assign_folder}
+        mkdir -p ${assign_folder}
 fi
 
 if [ ! -d "${vis_folder}" ]; then
-        mkdir ${vis_folder}
+        mkdir -p ${vis_folder}
 fi
 
 if [ ! -d "${bij_folder}" ]; then
-        mkdir ${bij_folder}
+        mkdir -p ${bij_folder}
 fi
 
 if [ ! -d "${dict_folder}" ]; then
-        mkdir ${dict_folder}
+        mkdir -p ${dict_folder}
 fi
 
+echo come her
 
 ####################
 # clean up previous result	
@@ -125,6 +126,8 @@ python  $python_folder$irrCC \
         $opt_tmp_result_folder$file \
         ${vis_file}
 
+echo here
+
 ####################
 # perform opt assignment and condense
 ####################
@@ -136,6 +139,11 @@ python  $python_folder$assign_condense \
         ${vis_file} \
         ${bij_file} \
         ${dict_folder}
+
+
+echo here
+
+echo ${assign_folder}${file}
 
 ####################
 # visualization
@@ -160,6 +168,7 @@ python  $python_folder$assign_condense \
 ####################
 for f in $(ls ${assign_folder}${file})
 do
+    echo "come here"
     # prepare executable strings
     bij_exe_str="${folder_now}src/${exe} --dis --dis_mode ${dis_mode} "
     bij_exe_str+="--input_file ${assign_folder}${file}/$f "
