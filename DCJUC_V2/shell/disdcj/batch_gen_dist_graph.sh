@@ -41,17 +41,17 @@ py_o2g=${python_folder}o_2_g.py
 # check the existance of sequence folder, 
 # if no create one
 if [ ! -d "${seq_folder}" ]; then
-	mkdir ${seq_folder}
+	mkdir -p ${seq_folder}
 fi
 # check the existance of graph folder, 
 # if no create one
 if [ ! -d "${graph_folder}" ]; then
-	mkdir ${graph_folder}
+	mkdir -p ${graph_folder}
 fi
 # check the existance of bijection folder, 
 # if no create one
 if [ ! -d "${bijection_folder}" ]; then
-	mkdir ${bijection_folder}
+	mkdir -p ${bijection_folder}
 fi
 
 #############################
